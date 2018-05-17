@@ -3,7 +3,8 @@
 const
   express = require('express'),
   bodyParser = require('body-parser'),
-  request = require('request');
+  request = require('request'),
+  util = require('util');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -19,7 +20,7 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
       user = req.body.user,
       jiraURL = issue.self.split('/rest/api')[0];
 
-  console.log('Changelog:'+changelog)
+  console.log('Changelog:\n' + util.inspect(changelog, false, null) )
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
 
