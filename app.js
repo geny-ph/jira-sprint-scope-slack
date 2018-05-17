@@ -48,7 +48,7 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
         {
           fallback: `${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
           color: 'good',
-          title: `<${jiraURL}/browse/${issue.key}|${issue.key}> ${issue.fields.summary}`,
+          title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
           fields: [
             {
               title: "Type",
