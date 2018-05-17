@@ -20,12 +20,12 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
       user = req.body.user,
       jiraURL = issue.self.split('/rest/api')[0];
 
-  console.log('Changelog:\n' + util.inspect(changelog, false, null) )
-  console.log('Issue:\n' + util.inspect(issue, false, null) )
+  //console.log('Changelog:\n' + util.inspect(changelog, false, null) )
+  //console.log('Issue:\n' + util.inspect(issue, false, null) )
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
 
-  let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10016)
+  let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
   if (!sprintChanged) {
 
@@ -46,7 +46,7 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
       attachments: [
         {
           fallback: `${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
-          color: 'danger',
+          color: 'good',
           title: `<${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}>`,
           thumb_url: `${user.avatarUrls["48x48"]}`,
           fields: [
@@ -56,18 +56,8 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
               short: true
             },
             {
-              title: "Story Points",
-              value: `${issue.fields.customfield_10021}`,
-              short: true
-            },
-            {
-              title: "Priority",
-              value: `${issue.fields.priority.name}`,
-              short: true
-            },
-            {
-              title: "Labels",
-              value: issue.fields.labels.join(', '),
+              title: "Motion Team",
+              value: `${issue.fields.customfield_11400}`,
               short: true
             }
           ]
