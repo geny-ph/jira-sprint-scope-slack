@@ -19,6 +19,8 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
       user = req.body.user,
       jiraURL = issue.self.split('/rest/api')[0];
 
+  console.log('Changelog:'+changelog)
+    
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
 
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10016)
