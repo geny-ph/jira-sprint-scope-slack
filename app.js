@@ -21,6 +21,7 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
       jiraURL = issue.self.split('/rest/api')[0];
 
   console.log('Changelog:\n' + util.inspect(changelog, false, null) )
+  console.log('Issue:\n' + util.inspect(issue, false, null) )
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
 
