@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.post('/jira-issue-added-to-sprint', function(req, res) {
+app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let issue = req.body.issue,
       changelog = req.body.changelog,
       user = req.body.user,
@@ -25,14 +25,63 @@ app.post('/jira-issue-added-to-sprint', function(req, res) {
   //console.log('Customfield_10004:\n' + util.inspect(issue.fields.customfield_10004, false, null) )
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
-
+  let status = changelog.items.find(item => item.field === "status")
+  let isDone = status != null && status.toString === "Done"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
   if (!sprintChanged) {
 
     console.log('No Sprint change')
-    res.sendStatus(200)
 
+    if (isDone) {
+      let msg = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
+      console.log(msg)
+
+      let postData = {
+        text: msg,
+        attachments: [
+          {
+            fallback: `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key} as ${issue.fields.status.name}> to ${sprintChanged.toString}`,
+            color: 'good',
+            title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
+            fields: [
+              {
+                title: "Type",
+                value: `${issue.fields.issuetype.name}`,
+                short: true
+              },
+              {
+                title: "Motion Team",
+                value: `${issue.fields.customfield_11400}`,
+                short: true
+              }
+            ]
+          }
+        ]
+      }
+
+      let options = {
+        method: 'post',
+        body: postData,
+        json: true,
+        url: process.env.SLACK_URL
+      }
+
+      request(options, function(err, response, body) {
+        if (err) {
+          console.error('error posting json: ', err)
+        } else {
+          console.log('alerted Slack')
+          res.sendStatus(200)
+        }
+      })
+
+    }
+    else {
+
+      res.sendStatus(200)
+
+    }
   } else if (sprintChanged.to === "") {
 
     console.log(`${issue.key} removed from ${sprintChanged.fromString}`)
