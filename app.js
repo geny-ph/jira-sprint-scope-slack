@@ -55,6 +55,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
             title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
             fields: [
               {
+                title: "Type",
+                value: `${issue.fields.issuetype.name}`,
+                short: true
+              },
+              {
                 title: "Fixed version",
                 value: `${fixVersions}`,
                 short: true
