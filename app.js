@@ -18,10 +18,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let issue = req.body.issue,
       changelog = req.body.changelog,
       user = req.body.user,
+      comment = req.body.comment,
       jiraURL = issue.self.split('/rest/api')[0];
 
+  // DEBUG LOGS – for n00bz
   console.log('Changelog:\n' + util.inspect(changelog, false, null) )
   console.log('Issue:\n' + util.inspect(issue, false, null) )
+  console.log('Comment:\n' + util.inspect(comment, false, null) )
   //console.log('Customfield_10004:\n' + util.inspect(issue.fields.customfield_10004, false, null) )
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
