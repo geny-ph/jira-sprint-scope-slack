@@ -27,8 +27,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   console.log('Comment:\n' + util.inspect(comment, false, null) )
   //console.log('Customfield_10004:\n' + util.inspect(issue.fields.customfield_10004, false, null) )
     
-  let sprintChanged = changelog.items.find(item => item.field === "Sprint")
-  let status = changelog.items.find(item => item.field === "status")
+  let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
+  let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
   let isDone = !!status && status.toString === "Done"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
