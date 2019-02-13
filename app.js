@@ -26,13 +26,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     
   let sprintChanged = changelog.items.find(item => item.field === "Sprint")
   let status = changelog.items.find(item => item.field === "status")
-  console.log(`status == ${status}`)
   let isDone = !!status && status.toString === "Done"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
   if (!sprintChanged) {
 
     console.log('No Sprint change')
+    console.log(`status == ${status.toString}`)
 
     if (isDone) {
       let msg = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
