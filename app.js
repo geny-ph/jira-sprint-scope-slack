@@ -64,11 +64,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
                 value: `${fixVersions}`,
                 short: true
               },
-              {
-                title: "Comment",
-                value: `${!!comment ? comment.body : 'none'}`,
-                short: true
-              }
             ]
           }
         ]
