@@ -42,7 +42,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         text: msg,
         attachments: [
           {
-            fallback: `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key} as ${issue.fields.status.name}> to ${sprintChanged.toString}`,
+            fallback: `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key} as ${issue.fields.status.name}>`,
             color: 'good',
             title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
             fields: [
