@@ -40,6 +40,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     if (isDone) {
       let msg = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
       console.log(msg)
+      let fixVersions = 'none'
+      if (!!issue.fields.fixVersions) {
+        fixVersions = ''
+        issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
+      }
 
       let postData = {
         text: msg,
@@ -50,13 +55,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
             title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
             fields: [
               {
-                title: "Type",
-                value: `${issue.fields.issuetype.name}`,
+                title: "Fixed version",
+                value: `${fixVersions}`,
                 short: true
               },
               {
-                title: "Motion Team",
-                value: `${issue.fields.customfield_11400}`,
+                title: "Comment",
+                value: `${!!comment ? comment.body : 'none'}`,
                 short: true
               }
             ]
