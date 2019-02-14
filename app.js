@@ -190,7 +190,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   }
 
   function greetings() {
-    let greetings = [ 'Ahoy!', 'Plep,', 'Hey,', 'Wesh,', 'Hallo!', '¡Holà!', 'Hej!', 'Bonjours,', 'Plip,', 'Plop,', 'Glop,', 'Hi!' ]
+    let greetings = [ 'Ahoy!', 'Plep,', 'Hey,', 'Wesh,', 'Hallo!', '¡Hola!', 'Hej!', 'Bonjours,', 'Plip,', 'Plop,', 'Glop,', 'Hi!' ]
     let index = Math.floor(Math.random()*greetings.length)
     return greetings[index]
   }
