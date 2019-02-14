@@ -40,7 +40,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let postTitle = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
-  let greetings = greetings()
+  let greetings = getGreetings()
 
   if (!sprintChanged) {
 
@@ -189,7 +189,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   }
 
-  function greetings() {
+  function getGreetings() {
     let greetings = [ 'Ahoy!', 'Plep,', 'Hey,', 'Wesh,', 'Hallo!', '¡Hola!', 'Hej!', 'Bonjours,', 'Plip,', 'Plop,', 'Glop,', 'Hi!' ]
     let index = Math.floor(Math.random()*greetings.length)
     return greetings[index]
