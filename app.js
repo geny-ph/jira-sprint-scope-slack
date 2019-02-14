@@ -21,12 +21,17 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       comment = req.body.comment,
       jiraURL = issue.self.split('/rest/api')[0];
 
-  // DEBUG LOGS – for n00bz
   let urlMotion = process.env.SLACK_URL_CM_MOTION
-  // console.log('Changelog:\n' + util.inspect(changelog, false, null) )
-  // console.log('Issue:\n' + util.inspect(issue, false, null) )
-  // console.log('Comment:\n' + util.inspect(comment, false, null) )
-  //console.log('Customfield_10004:\n' + util.inspect(issue.fields.customfield_10004, false, null) )
+  let urlCyrielle = process.env.SLACK_URL_DM_CYRIELLE
+  let urlPaul = process.env.SLACK_URL_DM_PAUL
+
+  // DEBUG
+  urlMotion = urlPaul
+  // Logs – for n00bz
+  console.log('Changelog:\n' + util.inspect(changelog, false, null) )
+  console.log('Issue:\n' + util.inspect(issue, false, null) )
+  console.log('Comment:\n' + util.inspect(comment, false, null) )
+  // console.log('Customfield_10004:\n' + util.inspect(issue.fields.customfield_10004, false, null) )
     
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
