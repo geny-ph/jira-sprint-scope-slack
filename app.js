@@ -27,6 +27,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   // DEBUG
   urlMotion = urlPaul
+  urlCyrielle = urlPaul
   // Logs – for n00bz
   console.log('Changelog:\n' + util.inspect(changelog, false, null) )
   console.log('Issue:\n' + util.inspect(issue, false, null) )
