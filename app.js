@@ -56,8 +56,9 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       let postData = {
         text: msg,
         attachments: [
+      let fallback = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
           {
-            fallback: `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key} as ${issue.fields.status.name}>`,
+            fallback: fallback,
             color: 'good',
             title: postTitle,
             fields: [
