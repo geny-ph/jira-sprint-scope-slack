@@ -40,6 +40,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let postTitle = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
+  let greetings = greetings()
 
   if (!sprintChanged) {
 
@@ -49,8 +50,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
     if (isDone || toValidate) {
 
-      let msg = `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key}> as ${issue.fields.status.name}`
-      let fallback = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
+      let msg = `${greetings} ${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key}> as *${issue.fields.status.name}*`
+      let fallback = `${greetings} ${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
       console.log(msg)
       
       let attachments = [
@@ -121,10 +122,10 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     console.log(`${issue.key} added to an active sprint: ${sprintChanged.toString}`)
 
     let postData = {
-      text: `${user.displayName} added an issue to ${sprintChanged.toString}`,
+      text: `${greetings} ${user.displayName} added an issue to ${sprintChanged.toString}`,
       attachments: [
         {
-          fallback: `${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
+          fallback: `${greetings} ${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
           color: 'good',
           title: postTitle,
           fields: [
@@ -187,6 +188,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     }
 
   }
+
+  function greetings() {
+    let greetings = [ 'Ahoy!', 'Plep,', 'Hey,', 'Wesh,', 'Hallo!', '¡Holà!', 'Hej!', 'Bonjours,', 'Plip,', 'Plop,', 'Glop,', 'Hi!' ]
+    let index = Math.floor(Math.random()*greetings.length)
+    return greetings[index]
+  }
+
 })
 
 app.listen(app.get('port'), function() {
