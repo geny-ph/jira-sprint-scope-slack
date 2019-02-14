@@ -68,7 +68,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
           }
         ]
 
-      if (!!issue.fields.fixVersions) {
+      if (isDone && !!issue.fields.fixVersions) {
         let fixVersions = ''
         issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
         attachments[0].fields.push({
