@@ -22,6 +22,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       jiraURL = issue.self.split('/rest/api')[0];
 
   // DEBUG LOGS – for n00bz
+  let urlMotion = process.env.SLACK_URL_CM_MOTION
   // console.log('Changelog:\n' + util.inspect(changelog, false, null) )
   // console.log('Issue:\n' + util.inspect(issue, false, null) )
   // console.log('Comment:\n' + util.inspect(comment, false, null) )
@@ -73,7 +74,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         method: 'post',
         body: postData,
         json: true,
-        url: process.env.SLACK_URL
+        url: urlMotion
       }
 
       request(options, function(err, response, body) {
@@ -127,7 +128,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       method: 'post',
       body: postData,
       json: true,
-      url: process.env.SLACK_URL
+      url: urlMotion
     }
 
     request(options, function(err, response, body) {
