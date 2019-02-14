@@ -37,6 +37,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
   let isDone = !!status && status.toString === "Done"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
+  let postTitle = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
 
   if (!sprintChanged) {
 
@@ -58,7 +59,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
           {
             fallback: `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key} as ${issue.fields.status.name}>`,
             color: 'good',
-            title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
+            title: postTitle,
             fields: [
               {
                 title: "Type",
@@ -112,7 +113,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         {
           fallback: `${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
           color: 'good',
-          title: `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`,
+          title: postTitle,
           fields: [
             {
               title: "Type",
