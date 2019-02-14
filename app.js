@@ -36,6 +36,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
   let isDone = !!status && status.toString === "Done"
+  let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let postTitle = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
 
@@ -43,20 +44,15 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
     console.log('No Sprint change')
     console.log(`isDone == ${isDone}`)
+    console.log(`toValidate == ${toValidate}`)
 
-    if (isDone) {
-      let msg = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
-      console.log(msg)
-      let fixVersions = 'none'
-      if (!!issue.fields.fixVersions) {
-        fixVersions = ''
-        issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
-      }
+    if (isDone || toValidate) {
 
-      let postData = {
-        text: msg,
-        attachments: [
+      let msg = `${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key}> as ${issue.fields.status.name}`
       let fallback = `${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
+      console.log(msg)
+      
+      let attachments = [
           {
             fallback: fallback,
             color: 'good',
@@ -66,15 +62,24 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
                 title: "Type",
                 value: `${issue.fields.issuetype.name}`,
                 short: true
-              },
-              {
-                title: "Fixed version",
-                value: `${fixVersions}`,
-                short: true
-              },
+              }
             ]
           }
         ]
+
+      if (!!issue.fields.fixVersions) {
+        let fixVersions = ''
+        issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
+        attachments.fields.push({
+                title: "Fixed version",
+                value: `${fixVersions}`,
+                short: true
+              })
+      }
+
+      let postData = {
+        text: msg,
+        attachments: attachments
       }
 
       let options = {
@@ -82,6 +87,10 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         body: postData,
         json: true,
         url: urlMotion
+      }
+
+      if (toValidate) {
+        options.url = urlCyrielle
       }
 
       request(options, function(err, response, body) {
