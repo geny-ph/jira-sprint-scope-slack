@@ -71,7 +71,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       if (!!issue.fields.fixVersions) {
         let fixVersions = ''
         issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
-        attachments.fields.push({
+        attachments[0].fields.push({
                 title: "Fixed version",
                 value: `${fixVersions}`,
                 short: true
