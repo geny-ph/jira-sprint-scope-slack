@@ -22,12 +22,12 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       jiraURL = issue.self.split('/rest/api')[0];
 
   let urlMotion = process.env.SLACK_URL_CM_MOTION
-  let urlCyrielle = process.env.SLACK_URL_DM_CYRIELLE
+  let urlMotionTesting = process.env.SLACK_URL_CM_MOTION_TESTING
   let urlPaul = process.env.SLACK_URL_DM_PAUL
 
   // // DEBUG
   // urlMotion = urlPaul
-  // urlCyrielle = urlPaul
+  // urlMotionTesting = urlPaul
   // // Logs – for n00bz
   // console.log('Changelog:\n' + util.inspect(changelog, false, null) )
   // console.log('Issue:\n' + util.inspect(issue, false, null) )
@@ -94,7 +94,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       }
 
       if (toValidate) {
-        options.url = urlCyrielle
+        options.url = urlMotionTesting
       }
 
       request(options, function(err, response, body) {
