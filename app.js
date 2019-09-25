@@ -44,10 +44,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   if (!sprintChanged) {
 
-    console.log('No Sprint change')
-    console.log(`isDone == ${isDone}`)
-    console.log(`toValidate == ${toValidate}`)
-
     if (isDone || toValidate) {
 
       let msg = `${greetings} ${user.displayName} marked ${postTitle} as *${issue.fields.status.name}*`
