@@ -59,7 +59,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   } else if (addedToActiveSprint) {
 
-    let msg = `${greetings} ${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`
+    let msg = `${greetings} ${user.displayName} added ${postTitle} to ${sprintChanged.toString}`
     console.log(`${msg}`)
 
     postToSlack(msg, urlMotion)
