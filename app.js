@@ -91,29 +91,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   } else if (addedToActiveSprint) {
 
-    console.log(`${issue.key} added to an active sprint: ${sprintChanged.toString}`)
+    let msg = `${greetings} ${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`
+    console.log(`${msg}`)
 
     let postData = {
-      text: `${greetings} ${user.displayName} added an issue to ${sprintChanged.toString}`,
-      attachments: [
-        {
-          fallback: `${greetings} ${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`,
-          color: 'good',
-          title: postTitle,
-          fields: [
-            {
-              title: "Type",
-              value: `${issue.fields.issuetype.name}`,
-              short: true
-            },
-            {
-              title: "Motion Team",
-              value: `${issue.fields.customfield_11400}`,
-              short: true
-            }
-          ]
-        }
-      ]
+      text: msg
     }
 
     let options = {
