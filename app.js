@@ -43,33 +43,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
       let msg = `${greetings} ${user.displayName} marked ${postTitle} as *${issue.fields.status.name}*`
       console.log(msg)
-      
-      let postData = {
-        text: msg
-      }
 
-      let options = {
-        method: 'post',
-        body: postData,
-        json: true,
-        url: urlMotion
-      }
+      let channel = toValidate === true ? urlMotionTesting : urlMotion;
+      postToSlack(msg, channel)
 
-      if (toValidate) {
-        options.url = urlMotionTesting
-      }
-
-      request(options, function(err, response, body) {
-        if (err) {
-          console.error('error posting json: ', err)
-        } else {
-          console.log('Sent to Slack')
-          res.sendStatus(200)
-        }
-      })
-
-    }
-    else {
+    } else {
 
       res.sendStatus(200)
 
@@ -84,31 +62,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     let msg = `${greetings} ${user.displayName} added <${jiraURL}/browse/${issue.key}|${issue.key}: ${issue.fields.summary}> to ${sprintChanged.toString}`
     console.log(`${msg}`)
 
-    let postData = {
-      text: msg
-    }
-
-    let options = {
-      method: 'post',
-      body: postData,
-      json: true,
-      url: urlMotion
-    }
-
-    request(options, function(err, response, body) {
-      if (err) {
-        console.error('error posting json: ', err)
-      } else {
-        console.log('Sent to Slack')
-        res.sendStatus(200)
-      }
-    })
+    postToSlack(msg, urlMotion)
 
   } else {
 
     console.log(`${issue.key} added to a closed or future sprint`)
     res.sendStatus(200)
-    
+
   }
 
   /*
@@ -141,6 +101,30 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     return greetings[index]
   }
 
+  /*
+   * Post $message to Slack channel with $url
+   */
+  function postToSlack(message, url) {
+    let postData = {
+      text: message
+    }
+
+    let options = {
+      method: 'post',
+      body: postData,
+      json: true,
+      url: url
+    }
+
+    request(options, function(err, response, body) {
+      if (err) {
+        console.error('error posting json: ', err)
+      } else {
+        console.log(`Message successfully sent to Slack')
+        res.sendStatus(200)
+      }
+    })
+   }
 })
 
 app.listen(app.get('port'), function() {
