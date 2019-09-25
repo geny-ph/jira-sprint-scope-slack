@@ -54,36 +54,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       let fallback = `${greetings} ${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
       console.log(msg)
       
-      let attachments = [
-          {
-            fallback: fallback,
-            color: 'good',
-            title: postTitle,
-            fields: []
-          }
-        ]
-
-      if (isDone) {
-        attachments[0].fields.push({
-                title: "Type",
-                value: `${issue.fields.issuetype.name}`,
-                short: true
-              })
-
-        if (!!issue.fields.fixVersions) {
-          let fixVersions = ''
-          issue.fields.fixVersions.forEach(function(version) { fixVersions += fixVersions.length ? ', ' + version.name : version.name } )
-          attachments[0].fields.push({
-                title: "Fixed version",
-                value: `${fixVersions}`,
-                short: true
-              })
-        }
-      }
-
       let postData = {
-        text: msg,
-        attachments: attachments
+        text: msg
       }
 
       let options = {
