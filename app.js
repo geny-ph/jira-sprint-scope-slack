@@ -120,7 +120,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       if (err) {
         console.error('error posting json: ', err)
       } else {
-        console.log(`Message successfully sent to Slack')
+        console.log('Message successfully sent to Slack')
         res.sendStatus(200)
       }
     })
