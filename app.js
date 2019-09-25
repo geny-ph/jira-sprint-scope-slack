@@ -50,8 +50,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
     if (isDone || toValidate) {
 
-      let msg = `${greetings} ${user.displayName} marked <${jiraURL}/browse/${issue.key}|${issue.key}> as *${issue.fields.status.name}*`
-      let fallback = `${greetings} ${user.displayName} marked ${issue.key} as ${issue.fields.status.name}`
+      let msg = `${greetings} ${user.displayName} marked ${postTitle} as *${issue.fields.status.name}*`
+      let fallback = `${greetings} ${user.displayName} marked ${postTitle} as ${issue.fields.status.name}`
       console.log(msg)
       
       let postData = {
