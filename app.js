@@ -142,7 +142,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   /*
    * Take an array of sprints (strings) and if you find one where state=active
    * then return true.
-  */
+   */
   function sprintChangedToActiveSprint(sprints) {
     // its possible there are no sprints
     if (!sprints) {
@@ -158,7 +158,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
       }
 
     }
-
   }
 
   /*
