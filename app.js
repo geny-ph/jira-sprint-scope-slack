@@ -36,8 +36,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let issueInformations = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
   let greetings = getGreetings()
-  let emojiDone = '✅'
-  let emojiValidation = '🛂'
+  let emojiDone = ':check:'
+  let emojiValidation = '🧐'
 
   if (!sprintChanged) {
 
