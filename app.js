@@ -51,7 +51,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     if (isDone || toValidate) {
 
       let msg = `${greetings} ${user.displayName} marked ${postTitle} as *${issue.fields.status.name}*`
-      let fallback = `${greetings} ${user.displayName} marked ${postTitle} as ${issue.fields.status.name}`
       console.log(msg)
       
       let postData = {
