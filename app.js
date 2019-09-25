@@ -25,9 +25,9 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let urlMotionTesting = process.env.SLACK_URL_CM_MOTION_TESTING
   let urlPaul = process.env.SLACK_URL_DM_PAUL
 
-  // // DEBUG
-  urlMotion = urlPaul
-  urlMotionTesting = urlPaul
+  // DEBUG
+  // urlMotion = urlPaul
+  // urlMotionTesting = urlPaul
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
