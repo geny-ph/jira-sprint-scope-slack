@@ -34,7 +34,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let isDone = !!status && status.toString === "Done"
   let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
-  let postTitle = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
+  let issueInformations = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
   let greetings = getGreetings()
   let emojiDone = '✅'
   let emojiValidation = '🛂'
@@ -51,7 +51,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         emoji = emojiValidation
       }
 
-      let msg = `${greetings} ${postTitle} -> ${emoji} (${user.displayName})`
+      let msg = `${greetings} ${emoji} ${issueInformations} (${user.displayName})`
       postToSlack(msg, channel)
 
     } else {
@@ -66,7 +66,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   } else if (addedToActiveSprint) {
 
-    let msg = `${greetings} ${user.displayName} added ${postTitle} to ${sprintChanged.toString}`
+    let msg = `${greetings} ${user.displayName} added ${issueInformations} to ${sprintChanged.toString}`
     console.log(`${msg}`)
 
     postToSlack(msg, urlMotion)
