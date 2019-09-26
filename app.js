@@ -103,7 +103,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
    * Pick a friendly greetings word.
    */
   function getGreetings() {
-    let greetings = [ 'Ahoy!', 'Plep,', 'Hey,', 'Wesh,', 'Hallo!', '¡Hola!', 'Hej!', 'Bonjours,', 'Plip,', 'Plop,', 'Glop,', 'Hi!', 'καλημέρα!', 'Salutations,', '!سلام', '!שָׁלוֹם' ]
+    let greetings = [ 'Ahoy!', 'Plep !', 'Hey!', 'Wesh !', 'Hallo!', '¡Hola!', 'Hej!', 'Bonjours !', 'Plip !', 'Plop !', 'Glop !', 'Hi!', 'καλημέρα!', 'Salutations.', 'Salam!', 'Shalom!' ]
     let index = Math.floor(Math.random()*greetings.length)
     return greetings[index]
   }
