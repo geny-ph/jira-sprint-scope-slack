@@ -15,19 +15,18 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.post('/motion-stories-bugs-to-slack', function(req, res) {
-  let issue = req.body.issue,
-      changelog = req.body.changelog,
-      user = req.body.user,
-      comment = req.body.comment,
-      jiraURL = issue.self.split('/rest/api')[0];
+  let issue = req.body.issue
+  let changelog = req.body.changelog
+  let user = req.body.user
+  let comment = req.body.comment
+  let jiraURL = issue.self.split('/rest/api')[0]
 
-  let urlMotion = process.env.SLACK_URL_CM_MOTION
-  let urlMotionTesting = process.env.SLACK_URL_CM_MOTION_TESTING
-  let urlPaul = process.env.SLACK_URL_DM_PAUL
+  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
 
   // DEBUG
-  // urlMotion = urlPaul
-  // urlMotionTesting = urlPaul
+  // SLACK_URL_MOTION = process.env.SLACK_URL_DM_PAUL
+  // SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_DM_PAUL
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
@@ -35,24 +34,26 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let issueInformations = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
+  
+  
+  let EMOJI_DONE = ':check:'
+  let EMOJI_VALIDATION = '🧐'
+  let EMOJI_WIP = '🔜'
+
+  let emoji = null
+  let channel = SLACK_URL_MOTION
   let greetings = getGreetings()
-  let emojiDone = ':check:'
-  let emojiValidation = '🧐'
 
   if (!sprintChanged) {
 
     if (isDone || toValidate) {
 
-      let channel = urlMotion
-      let emoji = emojiDone
+      emoji = EMOJI_DONE
       
       if (toValidate === true) {
-        channel = urlMotionTesting
-        emoji = emojiValidation
+        channel = SLACK_URL_MOTION_TESTING
+        emoji = EMOJI_VALIDATION
       }
-
-      let msg = `${greetings} ${emoji} ${issueInformations} (${user.displayName})`
-      postToSlack(msg, channel)
 
     } else {
 
@@ -66,16 +67,19 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   } else if (addedToActiveSprint) {
 
-    let msg = `${greetings} ${user.displayName} added ${issueInformations} to ${sprintChanged.toString}`
-    console.log(`${msg}`)
-
-    postToSlack(msg, urlMotion)
+    emoji = EMOJI_WIP
 
   } else {
 
     console.log(`${issue.key} added to a closed or future sprint`)
     res.sendStatus(200)
 
+  }
+
+  if (!!emoji && !!channel) {
+    let msg = `${greetings} ${emoji} ${issueInformations} (${user.displayName})`
+    console.log(msg)
+    postToSlack(msg, channel)
   }
 
   /*
