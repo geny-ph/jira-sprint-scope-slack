@@ -21,18 +21,14 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let comment = req.body.comment
   let jiraURL = issue.self.split('/rest/api')[0]
 
-  // let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
-  // let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
+  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
   let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
 
   let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
   let EMOJI_DONE = ':check:'
   let EMOJI_VALIDATION = '🧐'
   let EMOJI_WIP = '🔜'
-
-  // DEBUG
-  let SLACK_URL_MOTION = process.env.SLACK_URL_DM_PAUL
-  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_DM_PAUL
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
@@ -42,8 +38,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let toValidate = !!status && status.toString === "To Validate"
   let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
-  console.log(issue)
-  
   let emoji = null
   let channel = SLACK_URL_MOTION
   let greetings = getGreetings()
