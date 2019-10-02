@@ -21,12 +21,12 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let comment = req.body.comment
   let jiraURL = issue.self.split('/rest/api')[0]
 
-  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
-  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
+  // let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  // let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
 
   // DEBUG
-  // SLACK_URL_MOTION = process.env.SLACK_URL_DM_PAUL
-  // SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_DM_PAUL
+  SLACK_URL_MOTION = process.env.SLACK_URL_DM_PAUL
+  SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_DM_PAUL
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
@@ -34,7 +34,8 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let toValidate = !!status && status.toString === "To Validate"
   let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
   let issueInformations = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
-  
+
+  console.log(issue)
   
   let EMOJI_DONE = ':check:'
   let EMOJI_VALIDATION = '🧐'
@@ -79,6 +80,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   if (!!emoji && !!channel) {
     let msg = `${greetings} ${emoji} ${issueInformations} (${user.displayName})`
     console.log(msg)
+
     postToSlack(msg, channel)
   }
 
