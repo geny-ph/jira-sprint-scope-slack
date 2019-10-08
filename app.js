@@ -22,6 +22,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let jiraURL = issue.self.split('/rest/api')[0]
 
   let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
   let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
   let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
 
@@ -39,7 +40,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
   let emoji = null
-  let channel = SLACK_URL_MOTION
+  let channel = SLACK_URL_MOTION_JIRA
   let greetings = getGreetings()
   let issueInformations = `<${jiraURL}/browse/${issue.key}|${issue.key}>: ${issue.fields.summary}`
 
