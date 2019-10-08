@@ -80,7 +80,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   if (!!emoji && !!channel) {
     let msg = `${greetings} ${emoji} ${issueInformations} (${user.displayName})`
-    console.log(msg)
 
     postToSlack(msg, channel)
   }
