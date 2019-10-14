@@ -15,28 +15,48 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.post('/motion-stories-bugs-to-slack', function(req, res) {
+
+  let DEBUG_MODE = process.env.DEBUG_MODE == 1
+
+  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
+  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
+  let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
+  let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
+  let EMOJI_DONE = ':check:'
+  let EMOJI_VALIDATION = '🧐'
+  let EMOJI_WIP = '🔜'
+  let EMOJI_QAREFUSED = ':cross:'
+
+  if (DEBUG_MODE) {
+    SLACK_URL_MOTION = SLACK_URL_DM_PAUL
+    SLACK_URL_MOTION_JIRA = SLACK_URL_DM_PAUL
+    SLACK_URL_MOTION_TESTING = SLACK_URL_DM_PAUL
+  }
+
   let issue = req.body.issue
   let changelog = req.body.changelog
   let user = req.body.user
   let comment = req.body.comment
   let jiraURL = issue.self.split('/rest/api')[0]
 
-  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
-  let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
-  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
-  let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
-
-  let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
-  let EMOJI_DONE = ':check:'
-  let EMOJI_VALIDATION = '🧐'
-  let EMOJI_WIP = '🔜'
+  if (DEBUG_MODE) {
+    console.log("=== DEBUG_MODE ON! ===")
+    console.log("=== CHANGELOG: ===")
+    console.log(changelog)
+    console.log("=== ISSUE: ===")
+    console.log(issue)
+    console.log("=== COMMENT: ===")
+    console.log(comment)
+  }
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
-  let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
+  let isAddedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
   let isDone = !!status && status.toString === "Done"
-  let toValidate = !!status && status.toString === "To Validate"
+  let isToValidate = !!status && status.toString === "To Validate"
+  let isQARefused = !!status && status.toString === "QA Refused"
   let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
   let emoji = null
@@ -46,14 +66,18 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   if (!sprintChanged) {
 
-    if (isDone || toValidate) {
+    if (isDone || isToValidate || isQARefused) {
 
       emoji = EMOJI_DONE
       
-      if (toValidate === true) {
+      if (isToValidate === true) {
         channel = SLACK_URL_MOTION_TESTING
         emoji = EMOJI_VALIDATION
-      } else if (issueType == "subtask") {
+      } else if (isQARefused === true) {
+        channel = SLACK_URL_MOTION_TESTING
+        emoji = EMOJI_QAREFUSED
+      }
+      else if (issueType == "subtask") {
         channel = SLACK_URL_DM_PAUL
       }
 
@@ -67,7 +91,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     console.log(`${issue.key} removed from ${sprintChanged.fromString}`)
     res.sendStatus(200)
 
-  } else if (addedToActiveSprint) {
+  } else if (isAddedToActiveSprint) {
 
     emoji = EMOJI_WIP
 
@@ -134,6 +158,10 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         console.error('error posting json: ', err)
       } else {
         console.log('Message successfully sent to Slack')
+        if (DEBUG_MODE) {
+          console.log(message)
+        }
+
         res.sendStatus(200)
       }
     })
