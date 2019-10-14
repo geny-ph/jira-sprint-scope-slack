@@ -22,6 +22,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
   let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
   let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
+  let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
+  let EMOJI_DONE = ':check:'
+  let EMOJI_VALIDATION = '🧐'
+  let EMOJI_WIP = '🔜'
+  let EMOJI_QAREFUSED = ':cross:'
 
   if (DEBUG_MODE) {
     SLACK_URL_MOTION = SLACK_URL_DM_PAUL
@@ -40,12 +45,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     console.log(changelog)
     console.log(issue)
   }
-
-  let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
-  let EMOJI_DONE = ':check:'
-  let EMOJI_VALIDATION = '🧐'
-  let EMOJI_WIP = '🔜'
-  let EMOJI_QAREFUSED = ':cross:'
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
