@@ -15,16 +15,29 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.post('/motion-stories-bugs-to-slack', function(req, res) {
+
+  let DEBUG_MODE = process.env.DEBUG_MODE == 1
+
+  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
+  let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
+  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
+  let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
+
+  if (DEBUG_MODE) {
+    SLACK_URL_MOTION = SLACK_URL_DM_PAUL
+    SLACK_URL_MOTION_JIRA = SLACK_URL_DM_PAUL
+    SLACK_URL_MOTION_TESTING = SLACK_URL_DM_PAUL
+  }
+
   let issue = req.body.issue
   let changelog = req.body.changelog
   let user = req.body.user
   let comment = req.body.comment
   let jiraURL = issue.self.split('/rest/api')[0]
 
-  let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
-  let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
-  let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
-  let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
+  if (DEBUG_MODE) {
+    console.log(changelog)
+  }
 
   let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
   let EMOJI_DONE = ':check:'
@@ -135,6 +148,10 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         console.error('error posting json: ', err)
       } else {
         console.log('Message successfully sent to Slack')
+        if (DEBUG_MODE) {
+          console.log(message)
+        }
+
         res.sendStatus(200)
       }
     })
