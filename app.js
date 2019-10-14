@@ -36,7 +36,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let jiraURL = issue.self.split('/rest/api')[0]
 
   if (DEBUG_MODE) {
-    console.log("DEBUG_MODE =N!")
+    console.log("DEBUG_MODE ON!")
     console.log(changelog)
     console.log(issue)
   }
