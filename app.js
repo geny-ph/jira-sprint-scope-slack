@@ -77,9 +77,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
         channel = SLACK_URL_MOTION_TESTING
         emoji = EMOJI_QAREFUSED
       }
-      else if (issueType == "subtask") {
-        channel = SLACK_URL_DM_PAUL
-      }
 
     } else {
 
