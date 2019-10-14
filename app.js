@@ -45,6 +45,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let EMOJI_DONE = ':check:'
   let EMOJI_VALIDATION = '🧐'
   let EMOJI_WIP = '🔜'
+  let EMOJI_QAREFUSED = ':cross:'
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
@@ -52,6 +53,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   let isDone = !!status && status.toString === "Done"
   let toValidate = !!status && status.toString === "To Validate"
+  let isQARefused = !!status && status.toString === "QA Refused"
   let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
   let emoji = null
@@ -61,14 +63,18 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   if (!sprintChanged) {
 
-    if (isDone || toValidate) {
+    if (isDone || toValidate || isQARefused) {
 
       emoji = EMOJI_DONE
       
       if (toValidate === true) {
         channel = SLACK_URL_MOTION_TESTING
         emoji = EMOJI_VALIDATION
-      } else if (issueType == "subtask") {
+      } else if (isQARefused === true) {
+        channel = SLACK_URL_MOTION_TESTING
+        emoji = EMOJI_QAREFUSED
+      }
+      else if (issueType == "subtask") {
         channel = SLACK_URL_DM_PAUL
       }
 
