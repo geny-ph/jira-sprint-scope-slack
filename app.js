@@ -41,9 +41,13 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let jiraURL = issue.self.split('/rest/api')[0]
 
   if (DEBUG_MODE) {
-    console.log("DEBUG_MODE ON!")
+    console.log("=== DEBUG_MODE ON! ===")
+    console.log("=== CHANGELOG: ===")
     console.log(changelog)
+    console.log("=== ISSUE: ===")
     console.log(issue)
+    console.log("=== COMMENT: ===")
+    console.log(comment)
   }
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
