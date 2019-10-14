@@ -49,10 +49,10 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   
   let sprintChanged = !!changelog ? changelog.items.find(item => item.field === "Sprint") : null
   let status = !!changelog ? changelog.items.find(item => item.field === "status") : null
-  let addedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
+  let isAddedToActiveSprint = sprintChangedToActiveSprint(issue.fields.customfield_10004)
 
   let isDone = !!status && status.toString === "Done"
-  let toValidate = !!status && status.toString === "To Validate"
+  let isToValidate = !!status && status.toString === "To Validate"
   let isQARefused = !!status && status.toString === "QA Refused"
   let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
@@ -63,11 +63,11 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
   if (!sprintChanged) {
 
-    if (isDone || toValidate || isQARefused) {
+    if (isDone || isToValidate || isQARefused) {
 
       emoji = EMOJI_DONE
       
-      if (toValidate === true) {
+      if (isToValidate === true) {
         channel = SLACK_URL_MOTION_TESTING
         emoji = EMOJI_VALIDATION
       } else if (isQARefused === true) {
@@ -88,7 +88,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
     console.log(`${issue.key} removed from ${sprintChanged.fromString}`)
     res.sendStatus(200)
 
-  } else if (addedToActiveSprint) {
+  } else if (isAddedToActiveSprint) {
 
     emoji = EMOJI_WIP
 
