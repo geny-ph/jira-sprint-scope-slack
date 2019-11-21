@@ -22,7 +22,7 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
   let SLACK_URL_MOTION_TESTING = process.env.SLACK_URL_CM_MOTION_TESTING
   let SLACK_URL_DM_PAUL = process.env.SLACK_URL_DM_PAUL
-  let ISSUE_TYPE = { '1': "bug",'10001': "story", '3': "task", '5': "subtask", '2': "new feature", '4': "improvement", '10000': "epic" }
+
   let EMOJI_DONE = ':check:'
   let EMOJI_VALIDATION = '🧐'
   let EMOJI_WIP = '🔜'
@@ -57,7 +57,6 @@ app.post('/motion-stories-bugs-to-slack', function(req, res) {
   let isDone = !!status && status.toString.toLowerCase() === "done"
   let isToValidate = !!status && status.toString.toLowerCase() === "to validate"
   let isQARefused = !!status && status.toString.toLowerCase() === "qa refused"
-  let issueType = ISSUE_TYPE[issue.fields.issuetype.id]
 
   let emoji = null
   let channel = SLACK_URL_MOTION_JIRA
