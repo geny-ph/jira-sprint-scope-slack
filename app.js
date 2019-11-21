@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 app.post('/motion-stories-bugs-to-slack', function(req, res) {
 
-  let DEBUG_MODE = process.env.DEBUG_MODE == 1
+  let DEBUG_MODE = process.env.DEBUG == 1
 
   let SLACK_URL_MOTION = process.env.SLACK_URL_CM_MOTION
   let SLACK_URL_MOTION_JIRA = process.env.SLACK_URL_CM_MOTION_JIRA
